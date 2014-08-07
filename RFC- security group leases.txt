@@ -1,0 +1,29 @@
+This RFC describes a feature request for "security group leases"
+
+On AWS EC2, a security group has ingress and egress rules defined to allow network traffic for specific protocols and ports.
+At the moment, these rules do not have any time duration associated with them.
+
+An administrator must necessarily examine all rules in place from time to time to determine which are still valid and needed, or must be removed.
+
+A "security group lease" is one (or more) ingress (or egress) rule(s) that have a time duration assigned when created.
+
+In theory, if security group leases were to be supported as a platform service by AWS, the associated security group rules would be automatically removed at the "expiry of the lease".
+
+At the moment, the CLI can support security group leases on a limited basis.
+
+The CLI would then provide the user some or all of the following facilities:
+- Report all of the leases and associated security group rules that are currently in force
+- Allow the user to "extend" one or more leases for a further duration of time, or otherwise modify the remaining duration of a lease, including "expiring" the lease
+- "Schedule" a lease that is in force only at a pre-defined time, such as 'from the 1st Aug 2014 to 4th Aug 2014' or 'every Wednesday between 10:00 hours to 12:00 hours EST'
+- Audit all leases that were in force at any time now or in the past, and so on...
+
+Some common use cases where such leases would help limit access are described below:
+- A user in the field needs temporary access, and user traffic originates from a temporary IP address, as is commonly the case when using a mobile device, or ISP access.
+If the associated rules are not revoked when the user no longer needs such access, this will present a security hole as such IP address will most likely be re-assigned to another user at random
+
+- Systems (that may belong to independent entities) only exchange network traffic at certain times, and need not be reachable at other times
+
+This topic branch implements security group leases using a data store local to the user's CLI installation. As such, the implementation suffers from the problems inherent to such an approach.
+
+END-OF-FILE
+
